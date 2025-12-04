@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+python-multipart
+ffmpeg-python
+faster-whisper
+numpy
+pydantic
+jinja2
+python-dotenv
