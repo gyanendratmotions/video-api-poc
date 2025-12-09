@@ -14,6 +14,5 @@ async def upload_video(file: UploadFile = File(...)):
 
 
 
-# @router.get("/{user_id}")
 def get_user(user_id: int):
     pass
