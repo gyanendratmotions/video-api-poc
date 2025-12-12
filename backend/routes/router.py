@@ -12,7 +12,7 @@ async def get_transcript(file: UploadFile = File(...),want_cloning: bool = True)
 async def transcript_improvement(transcript: str,feedback: str):
     transformed_transcript = await transcript_improvement_logic(transcript, feedback)
     return {"improved_transcript": transformed_transcript}
-
+fervev
 
 async def generate_video(transcript: str,cloned_voice_id: str | None=None):
     generated_video_path = await generate_video_logic(transcript, cloned_voice_id)
