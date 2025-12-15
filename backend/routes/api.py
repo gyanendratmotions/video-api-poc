@@ -4,4 +4,5 @@ router = APIRouter()
 
 router.post("/get_transcript")(get_transcript)
 router.post("/transcript_improvement")(transcript_improvement)
+
 router.post("/generate_video")(generate_video)
