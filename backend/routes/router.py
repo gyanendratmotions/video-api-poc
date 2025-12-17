@@ -1,12 +1,12 @@
-from fastapi import APIRouter,UploadFile, File
+from fastapi import APIRouter,UploadFile, File,HTTPException
 from backend.services.services import clone_video_with_transcript,transcript_improvement_logic
 from backend.services.vid2vid import generate_video_logic
 import os
 
 
 async def get_transcript(file: UploadFile = File(...),want_cloning: bool = True):
-    transcript,cloned_voice_id = await clone_video_with_transcript(file,want_cloning)
-    return {"transcript": transcript, "cloned_voice_id": cloned_voice_id}
+    transcript= await clone_video_with_transcript(file,want_cloning)
+    return transcript
 
 
 async def transcript_improvement(transcript: str,feedback: str):

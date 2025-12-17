@@ -6,6 +6,12 @@ services:
     container_name: video_ai_poc
     ports:
       - "8000:8000"
+
+    env_file:
+      - .env
+
     volumes:
       - ./backend:/app/backend
       - ./data:/app/data
+
+    restart: unless-stopped
