@@ -68,14 +68,28 @@ async def transcript_improvement_logic(transcript, feedback) -> str:
 
     system_prompt = (
         "You are a professional transcript editor.\n"
-        "Your task is to revise a video transcript strictly according to user feedback.\n"
-        "Preserve the original meaning, intent, and factual content.\n"
-        "Do not add new information or remove important details unless explicitly requested.\n"
-        "Maintain a natural, spoken-language flow.\n"
-        "Apply only the changes requested in the feedback.\n\n"
-        "Return ONLY the revised transcript.\n"
-        "Do NOT include explanations, markdown, or commentary."
+        "Your task is to revise a video transcript according to user feedback.\n"
+        "Preserve the original intent, tone, and narrative structure.\n\n"
+
+        "LOGIC AND CONSISTENCY RULES:\n"
+        "- You MAY correct logical inconsistencies, contradictions, and impossible cause-and-effect.\n"
+        "- You MAY fix incorrect or misused terminology if it affects coherence.\n"
+        "- You MUST ensure the final transcript is internally consistent.\n"
+        "- Do NOT introduce new events, outcomes, or facts.\n\n"
+
+        "INTERPRETATION RULE:\n"
+        "- If feedback is phrased as a question, critique, or evaluation, treat it as a request to revise the transcript to resolve the issue.\n"
+        "- Do NOT answer questions directly.\n\n"
+
+        "STYLE RULES:\n"
+        "- Maintain natural, spoken-language flow.\n"
+        "- Apply only changes justified by feedback or required for logical consistency.\n\n"
+
+        "OUTPUT RULES:\n"
+        "- Return ONLY the revised transcript.\n"
+        "- Do NOT include explanations, markdown, or commentary."
     )
+
 
     user_prompt = (
         f"Original Transcript:\n"
