@@ -1,12 +1,14 @@
-from backend.constants.constant import UPLOAD_DIR
-from backend.constants.environ import ASSEMBLY_API_KEY
+from backend.constants.constant import UPLOAD_DIR,LLAMA_VERSATILE_MODEL
+from backend.constants.environ import ASSEMBLY_API_KEY,GROQ_API_KEY
 import shutil
 import assemblyai as aai
 from fastapi import UploadFile
+from groq import Groq
 import os
 
-print("bchhcd",ASSEMBLY_API_KEY)
 aai.settings.api_key = ASSEMBLY_API_KEY
+
+client = Groq(api_key=GROQ_API_KEY)
 
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
@@ -59,9 +61,38 @@ async def clone_video_with_transcript(file,want_cloning) -> str:
             os.remove(video_path)
 
 
-async def transcript_improvement_logic(transcript,feedback) -> str:
+async def transcript_improvement_logic(transcript, feedback) -> str:
     """
-    Placeholder function for transcript improvement logic.
+    Improves a transcript based on provided feedback using a Groq LLM.
     """
-    return None
+
+    system_prompt = (
+        "You are a professional transcript editor.\n"
+        "Your task is to revise a video transcript strictly according to user feedback.\n"
+        "Preserve the original meaning, intent, and factual content.\n"
+        "Do not add new information or remove important details unless explicitly requested.\n"
+        "Maintain a natural, spoken-language flow.\n"
+        "Apply only the changes requested in the feedback.\n\n"
+        "Return ONLY the revised transcript.\n"
+        "Do NOT include explanations, markdown, or commentary."
+    )
+
+    user_prompt = (
+        f"Original Transcript:\n"
+        f"\"\"\"\n{transcript}\n\"\"\"\n\n"
+        f"User Feedback:\n"
+        f"\"\"\"\n{feedback}\n\"\"\"\n\n"
+        f"Revise the transcript according to the feedback."
+    )
+
+    chat_completion = client.chat.completions.create(
+        model=LLAMA_VERSATILE_MODEL,
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt}
+        ],
+        temperature=0.2
+    )
+
+    return chat_completion.choices[0].message.content.strip()
 
