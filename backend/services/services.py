@@ -12,7 +12,7 @@ client = Groq(api_key=GROQ_API_KEY)
 
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-def video_to_transcript(video_path: str) -> str:
+async def video_to_transcript(video_path: str) -> str:
     """
     Converts a video file into a transcript using AssemblyAI.
     """
@@ -40,12 +40,10 @@ async def clone_video_with_transcript(file,want_cloning) -> str:
     video_path = os.path.join(UPLOAD_DIR, file.filename)
 
     try:
-        # Save uploaded video
         with open(video_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
-        # Transcribe video
-        transcript_text = video_to_transcript(video_path)
+        transcript_text = await video_to_transcript(video_path)
 
         return {
             "filename": file.filename,
@@ -56,7 +54,6 @@ async def clone_video_with_transcript(file,want_cloning) -> str:
         print(e)
 
     finally:
-        # Optional: cleanup uploaded file
         if os.path.exists(video_path):
             os.remove(video_path)
 
@@ -70,7 +67,6 @@ async def transcript_improvement_logic(transcript, feedback) -> str:
         "You are a professional transcript editor.\n"
         "Your task is to revise a video transcript according to user feedback.\n"
         "Preserve the original intent, tone, and narrative structure.\n\n"
-
         "LOGIC AND CONSISTENCY RULES:\n"
         "- You MAY correct logical inconsistencies, contradictions, and impossible cause-and-effect.\n"
         "- You MAY fix incorrect or misused terminology if it affects coherence.\n"
